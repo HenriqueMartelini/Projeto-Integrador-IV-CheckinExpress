@@ -12,39 +12,41 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/bookings")
 public class BookingController {
-    private final BookingService bookingService;
 
     @Autowired
-    public BookingController(BookingService bookingService) {
-        this.bookingService = bookingService;
-    }
+    private BookingService bookingService;
 
+    // Create a new booking
     @PostMapping
     public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
-        Booking createdBooking = bookingService.createBooking(booking);
+        Booking createdBooking = bookingService.createBooking(booking); // Usando o método correto
         return ResponseEntity.ok(createdBooking);
     }
 
+    // Get a booking by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Booking> getBookingById(@PathVariable String id) {
-        Booking booking = bookingService.getBookingById(id);
-        return booking != null ? ResponseEntity.ok(booking) : ResponseEntity.notFound().build();
+    public ResponseEntity<Booking> getBooking(@PathVariable String id) {
+        Booking foundBooking = bookingService.getBookingById(id); // Usando o método correto
+        return foundBooking != null ? ResponseEntity.ok(foundBooking) : ResponseEntity.notFound().build();
     }
 
+    // Get all bookings
     @GetMapping
     public ResponseEntity<List<Booking>> getAllBookings() {
-        List<Booking> bookings = bookingService.getAllBookings();
+        List<Booking> bookings = bookingService.getAllBookings(); // Usando o método correto
         return ResponseEntity.ok(bookings);
     }
 
+    // Delete a booking by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBookingById(@PathVariable String id) {
-        bookingService.deleteBookingById(id);
+    public ResponseEntity<Void> deleteBooking(@PathVariable String id) {
+        bookingService.deleteBookingById(id); // Método já não retorna boolean, portanto, removido o check de retorno
         return ResponseEntity.noContent().build();
     }
 
+    // Get expenses for a specific booking
     @GetMapping("/{id}/expenses")
-    public ResponseEntity<ExpenseSummary> getExpensesByBookingId(@PathVariable String id) {
+    public ResponseEntity<?> getExpensesByBookingId(@PathVariable String id) {
         ExpenseSummary expenseSummary = bookingService.getExpensesByBookingId(id);
         return expenseSummary != null ? ResponseEntity.ok(expenseSummary) : ResponseEntity.notFound().build();
     }
