@@ -1,5 +1,6 @@
 package com.checkinExpress.checkin_express.service;
 
+import com.checkinExpress.checkin_express.exception.BookingNotFoundException;
 import com.checkinExpress.checkin_express.model.Booking;
 import com.checkinExpress.checkin_express.model.Expense;
 import com.checkinExpress.checkin_express.model.ExpenseSummary;
@@ -7,6 +8,7 @@ import com.checkinExpress.checkin_express.repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,11 +24,11 @@ public class ExpenseSummaryService {
     /**
      * Método que calcula o total das despesas de uma reserva.
      *
-     * @param expenseSummary Objeto contendo a lista de despesas a serem somadas.
+     * @param expenses Lista de despesas a serem somadas.
      * @return O total das despesas.
      */
-    public double calculateTotalExpense(ExpenseSummary expenseSummary) {
-        return expenseSummary.getExpenses().stream()
+    public double calculateTotalExpense(List<Expense> expenses) {
+        return expenses.stream()
                 .mapToDouble(Expense::getAmount)
                 .sum();
     }
@@ -42,12 +44,18 @@ public class ExpenseSummaryService {
 
         if (bookingOptional.isPresent()) {
             Booking booking = bookingOptional.get();
-            // Passando a lista de despesas e o total para o construtor do ExpenseSummary
-            ExpenseSummary expenseSummary = new ExpenseSummary(booking.getExpenses(), calculateTotalExpense(new ExpenseSummary(booking.getExpenses(), 0.0)));
 
+            // Calculando o total das despesas
+            double totalExpenses = calculateTotalExpense(booking.getExpenses());
+
+            // Criando o objeto de resumo de despesas
+            ExpenseSummary expenseSummary = new ExpenseSummary(booking.getExpenses(), totalExpenses);
+
+            // Retornando o resumo das despesas
             return expenseSummary;
         }
 
-        return null;  // Caso a reserva não seja encontrada
+        // Caso a reserva não seja encontrada, lançar uma exceção ou retornar um erro adequado
+        throw new BookingNotFoundException("Reserva não encontrada com ID: " + bookingId);
     }
 }

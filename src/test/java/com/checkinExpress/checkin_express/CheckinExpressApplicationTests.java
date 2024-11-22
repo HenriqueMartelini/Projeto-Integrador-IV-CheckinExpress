@@ -13,26 +13,26 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class CheckinExpressApplicationTests {
 
 	@Autowired
-	private ApplicationContext applicationContext;
+	private ApplicationContext applicationCoxntext;
 
 	@Test
 	void contextLoads() {
 		// Verifica se o contexto da aplicação foi carregado corretamente
-		assertNotNull(applicationContext);
+		assertNotNull(applicationCoxntext);
 	}
 
 	// Caso queira testar algum componente específico
 	@Test
 	void testServiceBean() {
 		// Verifica se o bean de um serviço específico está sendo carregado corretamente
-		Object service = applicationContext.getBean(ExpenseSummaryService.class);
+		Object service = applicationCoxntext.getBean(ExpenseSummaryService.class);
 		assertNotNull(service, "ExpenseSummaryService should not be null");
 	}
 
 	@Test
 	void testControllerBean() {
 		// Verifica se o bean de um controlador está sendo carregado corretamente
-		Object controller = applicationContext.getBean(BookingController.class);
+		Object controller = applicationCoxntext.getBean(BookingController.class);
 		assertNotNull(controller, "BookingController should not be null");
 	}
 }

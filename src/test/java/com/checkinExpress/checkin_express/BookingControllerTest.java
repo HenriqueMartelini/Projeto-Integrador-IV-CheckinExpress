@@ -65,7 +65,6 @@ public class BookingControllerTest {
         // Mocking the behavior of bookingService
         when(bookingService.getBookingById("1")).thenReturn(booking);
 
-        // Performing the GET request and validating the response
         mockMvc.perform(get("/api/bookings/1"))
                 .andExpect(status().isOk()) // Verifying the status code
                 .andExpect(jsonPath("$.id").value("1")) // Verifying the booking ID
@@ -74,20 +73,16 @@ public class BookingControllerTest {
 
     @Test
     public void testGetBookingById_NotFound() throws Exception {
-        // Mocking the behavior of bookingService to return null (not found)
         when(bookingService.getBookingById("2")).thenReturn(null);
 
-        // Performing the GET request and verifying a 404 Not Found response
         mockMvc.perform(get("/api/bookings/2"))
-                .andExpect(status().isNotFound()); // Verifying the 404 status code
+                .andExpect(status().isNotFound());
     }
 
     @Test
     public void testGetAllBookings() throws Exception {
-        // Mocking the behavior of bookingService
         when(bookingService.getAllBookings()).thenReturn(Collections.singletonList(booking));
 
-        // Performing the GET request and verifying the response
         mockMvc.perform(get("/api/bookings"))
                 .andExpect(status().isOk()) // Verifying the status code
                 .andExpect(jsonPath("$[0].id").value("1")) // Verifying the booking ID in the list
@@ -96,21 +91,17 @@ public class BookingControllerTest {
 
     @Test
     public void testDeleteBooking_Success() throws Exception {
-        // Mocking the behavior of bookingService
         doNothing().when(bookingService).deleteBookingById("1");
 
-        // Performing the DELETE request and verifying the response
         mockMvc.perform(delete("/api/bookings/1"))
-                .andExpect(status().isNoContent()); // Verifying the status code 204 No Content
+                .andExpect(status().isNoContent());
     }
 
     @Test
     public void testDeleteBooking_NotFound() throws Exception {
-        // Mocking the behavior of bookingService
         doThrow(new RuntimeException("Booking not found")).when(bookingService).deleteBookingById("2");
 
-        // Performing the DELETE request and verifying the response
         mockMvc.perform(delete("/api/bookings/2"))
-                .andExpect(status().isNotFound()); // Verifying the status code 404 Not Found
+                .andExpect(status().isNotFound());
     }
 }
