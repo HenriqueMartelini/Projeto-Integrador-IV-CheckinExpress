@@ -1,13 +1,17 @@
 package com.checkinExpress.checkin_express.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "guests")
 public class Guest {
+    @Id
     private String id;
     private String name;
+    private String documentType;  // Exemplo: "CPF" ou "Passaporte"
+    private String documentNumber;  // Número do CPF ou passaporte
 
-    public Guest(String id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    // Getters e setters
 
     public String getId() {
         return id;
@@ -23,5 +27,21 @@ public class Guest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
+    }
+
+    public String getDocumentNumber() {
+        return documentNumber;
+    }
+
+    public void setDocumentNumber(String documentNumber) {
+        this.documentNumber = documentNumber;
     }
 }

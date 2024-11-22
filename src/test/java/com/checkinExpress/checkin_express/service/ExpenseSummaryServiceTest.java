@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Collections;
+import java.util.List;
 
 public class ExpenseSummaryServiceTest {
 
@@ -32,7 +33,11 @@ public class ExpenseSummaryServiceTest {
     public void testCalculateTotalExpense() {
         ExpenseSummary expenseSummary = new ExpenseSummary(Collections.singletonList(expense), 100.0);  // Passando as despesas e total
 
+<<<<<<< HEAD:src/test/java/com/checkinExpress/checkin_express/service/ExpenseSummaryServiceTest.java
         double total = expenseSummaryService.calculateTotalExpense(expenseSummary);
+=======
+        double total = expenseSummaryService.calculateTotalExpense((List<Expense>) expenseSummary);
+>>>>>>> remotes/origin/main:src/test/java/com/checkinExpress/checkin_express/ExpenseSummaryServiceTest.java
 
         assertEquals(100.0, total);
     }
