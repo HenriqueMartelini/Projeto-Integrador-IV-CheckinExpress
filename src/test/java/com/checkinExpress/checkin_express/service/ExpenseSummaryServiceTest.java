@@ -1,10 +1,9 @@
-package com.checkinExpress.checkin_express;
+package com.checkinExpress.checkin_express.service;
 
 import com.checkinExpress.checkin_express.model.Expense;
 import com.checkinExpress.checkin_express.model.ExpenseSummary;
 import com.checkinExpress.checkin_express.model.Booking;
 import com.checkinExpress.checkin_express.repository.BookingRepository;
-import com.checkinExpress.checkin_express.service.ExpenseSummaryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -1,8 +1,7 @@
-package com.checkinExpress.checkin_express;
+package com.checkinExpress.checkin_express.repository;
 
 import com.checkinExpress.checkin_express.model.Booking;
 import com.checkinExpress.checkin_express.model.Expense;
-import com.checkinExpress.checkin_express.repository.BookingRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

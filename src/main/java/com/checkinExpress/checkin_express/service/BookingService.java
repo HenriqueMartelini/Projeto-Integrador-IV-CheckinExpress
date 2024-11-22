@@ -12,10 +12,9 @@ import java.util.List;
 
 @Service
 public class BookingService {
-    private final BookingRepository bookingRepository;
+    private BookingRepository bookingRepository = null;
 
-    @Autowired
-    public BookingService(BookingRepository bookingRepository) {
+    public BookingService() {
         this.bookingRepository = bookingRepository;
     }
 

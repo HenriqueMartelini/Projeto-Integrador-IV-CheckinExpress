@@ -3,6 +3,7 @@ package com.checkinExpress.checkin_express.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +24,12 @@ public class Booking {
         this.roomId = roomId;
         this.bookingDate = bookingDate;
         this.expenses = expenses;
+    }
+
+    public Booking(String johnDoe, String date, String date1) {
+    }
+
+    public Booking(String number, String number1, LocalDate now, LocalDate localDate) {
     }
 
     public String getId() {

@@ -1,6 +1,5 @@
-package com.checkinExpress.checkin_express;
+package com.checkinExpress.checkin_express.controller;
 
-import com.checkinExpress.checkin_express.controller.BookingController;
 import com.checkinExpress.checkin_express.model.Booking;
 import com.checkinExpress.checkin_express.model.Expense;
 import com.checkinExpress.checkin_express.service.BookingService;
