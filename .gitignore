@@ -1,8 +1,6 @@
 # Ignorar pastas temporárias geradas pelo Maven
 target/
 !.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
 
 # Ignorar arquivos temporários do macOS
 .DS_Store
@@ -29,8 +27,6 @@ target/
 /nbdist/
 /.nb-gradle/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
 # Ignorar arquivos de configuração do VS Code
 .vscode/
