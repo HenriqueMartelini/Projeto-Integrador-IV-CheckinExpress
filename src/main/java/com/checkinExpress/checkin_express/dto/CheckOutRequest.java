@@ -1,8 +1,6 @@
 package com.checkinExpress.checkin_express.dto;
 
 public class CheckOutRequest {
-<<<<<<< HEAD
-=======
 
     private String reservationNumber;
     private String guestName;
@@ -31,5 +29,4 @@ public class CheckOutRequest {
         this.reservationNumber = reservationNumber;
         this.guestName = guestName;
     }
->>>>>>> remotes/origin/main
 }

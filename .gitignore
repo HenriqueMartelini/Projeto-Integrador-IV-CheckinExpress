@@ -1,12 +1,13 @@
-HELP.md
+# Ignorar pastas temporárias geradas pelo Maven
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-.env
+# Ignorar arquivos temporários do macOS
+.DS_Store
 
-### STS ###
+# Ignorar arquivos de configuração do Spring Tool Suite
 .apt_generated
 .classpath
 .factorypath
@@ -15,13 +16,13 @@ target/
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
+# Ignorar arquivos de configuração do IntelliJ
 .idea
 *.iws
 *.iml
 *.ipr
 
-### NetBeans ###
+# Ignorar arquivos do NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
@@ -31,5 +32,5 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### VS Code ###
+# Ignorar arquivos de configuração do VS Code
 .vscode/

@@ -1,8 +1,4 @@
 package com.checkinExpress.checkin_express.controller;
-
-<<<<<<< HEAD
-public class TestController {
-=======
 import com.checkinExpress.checkin_express.repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/test")
+
 public class TestController {
 
     @Autowired
@@ -26,5 +23,4 @@ public class TestController {
             return ResponseEntity.status(500).body("Erro ao conectar ao banco de dados: " + e.getMessage());
         }
     }
->>>>>>> remotes/origin/main
 }

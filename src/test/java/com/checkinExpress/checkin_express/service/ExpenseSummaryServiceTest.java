@@ -31,14 +31,8 @@ public class ExpenseSummaryServiceTest {
 
     @Test
     public void testCalculateTotalExpense() {
-        ExpenseSummary expenseSummary = new ExpenseSummary(Collections.singletonList(expense), 100.0);  // Passando as despesas e total
-
-<<<<<<< HEAD:src/test/java/com/checkinExpress/checkin_express/service/ExpenseSummaryServiceTest.java
-        double total = expenseSummaryService.calculateTotalExpense(expenseSummary);
-=======
+        ExpenseSummary expenseSummary = new ExpenseSummary(Collections.singletonList(expense), 100.0);
         double total = expenseSummaryService.calculateTotalExpense((List<Expense>) expenseSummary);
->>>>>>> remotes/origin/main:src/test/java/com/checkinExpress/checkin_express/ExpenseSummaryServiceTest.java
-
         assertEquals(100.0, total);
     }
 

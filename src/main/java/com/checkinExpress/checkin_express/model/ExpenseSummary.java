@@ -11,6 +11,10 @@ public class ExpenseSummary {
         this.total = total;
     }
 
+    public ExpenseSummary() {
+
+    }
+
     public List<Expense> getExpenses() {
         return expenses;
     }

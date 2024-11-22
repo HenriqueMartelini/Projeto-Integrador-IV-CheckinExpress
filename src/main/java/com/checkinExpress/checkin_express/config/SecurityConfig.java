@@ -1,8 +1,6 @@
 package com.checkinExpress.checkin_express.config;
 
-<<<<<<< HEAD
-public class SecurityConfig {
-=======
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,5 +18,4 @@ public class SecurityConfig {
 
         return http.build();
     }
->>>>>>> remotes/origin/main
 }

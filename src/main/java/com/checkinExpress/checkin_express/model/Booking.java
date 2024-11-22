@@ -4,12 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-<<<<<<< HEAD
 import java.time.LocalDate;
-=======
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
->>>>>>> remotes/origin/main
 import java.util.Date;
 import java.util.List;
 
@@ -43,15 +40,15 @@ public class Booking {
         this.checkOutDateString = checkOutDateString;
     }
 
-<<<<<<< HEAD
     public Booking(String johnDoe, String date, String date1) {
     }
 
     public Booking(String number, String number1, LocalDate now, LocalDate localDate) {
     }
-=======
+
+    public <T> Booking(String number, String number1, String a1, Date bookingDate, List<T> list) {
+    }
     // Getters e Setters
->>>>>>> remotes/origin/main
 
     public String getId() {
         return id;

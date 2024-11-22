@@ -1,8 +1,6 @@
 package com.checkinExpress.checkin_express.dto;
 
 public class CheckInRequest {
-<<<<<<< HEAD
-=======
     private String reservationNumber;
     private String guestName;
     private String documentType;   // "CPF" ou "PASSPORT"
@@ -40,5 +38,4 @@ public class CheckInRequest {
     public void setDocumentNumber(String documentNumber) {
         this.documentNumber = documentNumber;
     }
->>>>>>> remotes/origin/main
 }

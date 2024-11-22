@@ -1,9 +1,4 @@
 package com.checkinExpress.checkin_express.service;
-
-<<<<<<< HEAD
-public class PassportValidator {
-}
-=======
 import java.util.regex.Pattern;
 
 public class PassportValidator {
@@ -14,11 +9,6 @@ public class PassportValidator {
         if (passportNumber == null || !PASSPORT_PATTERN.matcher(passportNumber).matches()) {
             return false;
         }
-
-        // Caso necessário, adicione validações mais específicas para o número do passaporte
-
         return true;
     }
 }
-
->>>>>>> remotes/origin/main

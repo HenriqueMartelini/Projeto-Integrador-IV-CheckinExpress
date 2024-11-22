@@ -1,5 +1,6 @@
 package com.checkinExpress.checkin_express.service;
 
+import com.checkinExpress.checkin_express.exception.BookingNotFoundException;
 import com.checkinExpress.checkin_express.exception.GuestNotFoundException;
 import com.checkinExpress.checkin_express.model.Booking;
 import com.checkinExpress.checkin_express.model.Expense;
@@ -7,7 +8,6 @@ import com.checkinExpress.checkin_express.model.ExpenseSummary;
 import com.checkinExpress.checkin_express.model.Guest;
 import com.checkinExpress.checkin_express.repository.BookingRepository;
 import com.checkinExpress.checkin_express.repository.GuestRepository;
-import com.checkinExpress.checkin_express.exception.BookingNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +17,12 @@ import java.util.List;
 
 @Service
 public class BookingService {
-<<<<<<< HEAD
-    private BookingRepository bookingRepository = null;
-
-    public BookingService() {
-=======
 
     private final BookingRepository bookingRepository;
     private final GuestRepository guestRepository;
 
     @Autowired
     public BookingService(BookingRepository bookingRepository, GuestRepository guestRepository) {
->>>>>>> remotes/origin/main
         this.bookingRepository = bookingRepository;
         this.guestRepository = guestRepository;
     }
@@ -73,14 +67,14 @@ public class BookingService {
 
         // Verifica se o hóspede existe
         Guest guest = guestRepository.findById(booking.getGuestId())
-                .orElseThrow(() -> new GuestNotFoundException("Hóspede não encontrado."));
+                .orElseThrow();
 
         // Valida o documento (CPF ou passaporte)
-        if (documentType.equals("CPF")) {
+        if ("CPF".equalsIgnoreCase(documentType)) {
             if (!isValidCPF(documentNumber)) {
                 throw new IllegalArgumentException("CPF inválido.");
             }
-        } else if (documentType.equals("Passaporte")) {
+        } else if ("Passaporte".equalsIgnoreCase(documentType)) {
             if (!isValidPassport(documentNumber)) {
                 throw new IllegalArgumentException("Passaporte inválido.");
             }
@@ -89,47 +83,40 @@ public class BookingService {
         }
 
         // Atualiza a data de check-in
-        booking.setCheckInDate(new Date()); // Define a data atual como a data de check-in
+        booking.setCheckInDate(new Date());
         bookingRepository.save(booking);
 
         return booking;
     }
 
-
     private boolean isValidCPF(String cpf) {
-        // Implementação básica da validação do CPF
-        // A validação real pode ser mais complexa, incluindo a verificação de dígitos de verificação
-        return cpf.matches("[0-9]{11}");
+        // Validação básica do CPF (apenas formato, sem cálculo de dígitos verificadores)
+        return cpf != null && cpf.matches("\\d{11}");
     }
 
     private boolean isValidPassport(String passport) {
-        // Implementação básica da validação do passaporte
-        // A validação real pode incluir verificar o formato, o país de origem, etc.
-        return passport.matches("[0-9]{6,9}");
+        // Validação básica do passaporte (apenas formato)
+        return passport != null && passport.matches("\\d{6,9}");
     }
 
     public ExpenseSummary checkOutBooking(String reservationNumber, String guestName) {
-        // Lógica para verificar se a reserva existe
+        // Valida a reserva
         Booking booking = bookingRepository.findByReservationNumberAndGuestName(reservationNumber, guestName)
                 .orElseThrow(() -> new BookingNotFoundException("Reserva não encontrada para os dados fornecidos."));
 
-        // Verificar se o check-in foi realizado
+        // Verifica se o check-in foi realizado
         if (booking.getCheckInDate() == null) {
             throw new IllegalStateException("O hóspede ainda não fez o check-in.");
         }
 
-        // Buscar as despesas da reserva
+        // Calcula o total das despesas
         double totalExpenses = booking.getExpenses().stream().mapToDouble(Expense::getAmount).sum();
 
-        // Atualizar a data de check-out
-        booking.setCheckOutDateString(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(new Date()));  // Atualizando a data do check-out
+        // Atualiza a data de check-out
+        booking.setCheckOutDateString(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(new Date()));
         bookingRepository.save(booking);
 
-        // Criar o resumo de despesas
-        ExpenseSummary expenseSummary = new ExpenseSummary(booking.getExpenses(), totalExpenses);
-
-        // Retornar o resumo das despesas
-        return expenseSummary;
+        // Retorna o resumo de despesas
+        return new ExpenseSummary(booking.getExpenses(), totalExpenses);
     }
-
 }
