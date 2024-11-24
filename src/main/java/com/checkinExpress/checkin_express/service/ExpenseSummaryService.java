@@ -1,53 +1,37 @@
 package com.checkinExpress.checkin_express.service;
 
-import com.checkinExpress.checkin_express.model.Booking;
 import com.checkinExpress.checkin_express.model.Expense;
 import com.checkinExpress.checkin_express.model.ExpenseSummary;
-import com.checkinExpress.checkin_express.repository.BookingRepository;
+import com.checkinExpress.checkin_express.repository.ExpenseRepository;
+import com.checkinExpress.checkin_express.exception.BookingNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class ExpenseSummaryService {
 
-    private final BookingRepository bookingRepository;
+    private final ExpenseRepository expenseRepository;
 
     @Autowired
-    public ExpenseSummaryService(BookingRepository bookingRepository) {
-        this.bookingRepository = bookingRepository;
+    public ExpenseSummaryService(ExpenseRepository expenseRepository) {
+        this.expenseRepository = expenseRepository;
     }
 
-    /**
-     * Método que calcula o total das despesas de uma reserva.
-     *
-     * @param expenseSummary Objeto contendo a lista de despesas a serem somadas.
-     * @return O total das despesas.
-     */
-    public double calculateTotalExpense(ExpenseSummary expenseSummary) {
-        return expenseSummary.getExpenses().stream()
-                .mapToDouble(Expense::getAmount)
-                .sum();
-    }
+    public ExpenseSummary getExpenseSummaryById(String bookingId) {
+        // Consultar a lista de despesas
+        List<Expense> expenses = expenseRepository.findByBookingId(bookingId);
 
-    /**
-     * Método que recupera um resumo de despesas de uma reserva com base no ID da reserva.
-     *
-     * @param bookingId ID da reserva.
-     * @return O resumo das despesas (ExpenseSummary).
-     */
-    public ExpenseSummary getExpenseSummary(String bookingId) {
-        Optional<Booking> bookingOptional = bookingRepository.findById(bookingId);
-
-        if (bookingOptional.isPresent()) {
-            Booking booking = bookingOptional.get();
-            // Passando a lista de despesas e o total para o construtor do ExpenseSummary
-            ExpenseSummary expenseSummary = new ExpenseSummary(booking.getExpenses(), calculateTotalExpense(new ExpenseSummary(booking.getExpenses(), 0.0)));
-
-            return expenseSummary;
+        if (expenses == null || expenses.isEmpty()) {
+            throw new BookingNotFoundException("Não foram encontradas despesas para a reserva com ID: " + bookingId);
         }
 
-        return null;  // Caso a reserva não seja encontrada
+        // Calcular o total das despesas
+        double total = expenses.stream().mapToDouble(Expense::getAmount).sum();
+
+        // Criar e retornar o resumo de despesas
+        return new ExpenseSummary(expenses, total);
     }
+
 }
