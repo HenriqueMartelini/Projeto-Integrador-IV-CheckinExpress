@@ -24,5 +24,4 @@ public class CheckinExpressApplication {
 
 		SpringApplication.run(CheckinExpressApplication.class, args);
 	}
-
 }

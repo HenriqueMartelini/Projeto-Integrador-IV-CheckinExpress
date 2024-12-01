@@ -33,5 +33,4 @@ public class ExpenseSummaryService {
         // Criar e retornar o resumo de despesas
         return new ExpenseSummary(expenses, total);
     }
-
 }

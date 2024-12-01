@@ -1,16 +1,21 @@
 package com.checkinExpress.checkin_express.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "rooms")
 public class Room {
-    private String id;
-    private String type;
-    private double price;
 
-    public Room(String id, String type, double price) {
-        this.id = id;
-        this.type = type;
-        this.price = price;
-    }
+    @Id
+    private String id;  // ID do quarto (pode ser gerado automaticamente pelo MongoDB)
 
+    private String roomNumber;  // Número do quarto
+    private double dailyValue;  // Valor da diária
+    private boolean available;  // Se o quarto está disponível ou não
+    private String roomType;    // Tipo do quarto (e.g., "Luxo", "Standard")
+    private String description; // Descrição do quarto
+
+    // Getters and Setters
     public String getId() {
         return id;
     }
@@ -19,19 +24,43 @@ public class Room {
         this.id = id;
     }
 
-    public String getType() {
-        return type;
+    public String getRoomNumber() {
+        return roomNumber;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
     }
 
-    public double getPrice() {
-        return price;
+    public double getDailyValue() {
+        return dailyValue;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setDailyValue(double dailyValue) {
+        this.dailyValue = dailyValue;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -3,15 +3,18 @@ package com.checkinExpress.checkin_express.controller;
 import com.checkinExpress.checkin_express.dto.CheckInRequest;
 import com.checkinExpress.checkin_express.exception.BookingNotFoundException;
 import com.checkinExpress.checkin_express.exception.GuestNotFoundException;
-import com.checkinExpress.checkin_express.model.Booking;
-import com.checkinExpress.checkin_express.model.ExpenseSummary;
+import com.checkinExpress.checkin_express.model.*;
 import com.checkinExpress.checkin_express.repository.GuestRepository;
+import com.checkinExpress.checkin_express.repository.RoomRepository;
 import com.checkinExpress.checkin_express.service.BookingService;
+import com.checkinExpress.checkin_express.service.ExpenseSummaryService;
+import com.checkinExpress.checkin_express.service.GuestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -23,6 +26,19 @@ public class BookingController {
 
     @Autowired
     private GuestRepository guestRepository;
+
+    @Autowired
+    private RoomRepository roomRepository;
+
+    @Autowired
+    private GuestService guestService;
+
+    private final ExpenseSummaryService expenseSummaryService;
+
+    @Autowired  // Injeção de dependência
+    public BookingController(ExpenseSummaryService expenseSummaryService) {
+        this.expenseSummaryService = expenseSummaryService;
+    }
 
     // Create a new booking
     @PostMapping
@@ -129,27 +145,66 @@ public class BookingController {
 
         if (booking.isPresent()) {
             Booking b = booking.get();
-            Map<String, Object> response = new HashMap<>();
-            response.put("guestName", b.getGuestName());
-            response.put("roomId", b.getRoomId());
-            response.put("checkInDate", b.getCheckInDate());
-            response.put("checkOutDate", b.getCheckOutDate());
-            response.put("reservationNumber", b.getReservationNumber());
-            response.put("dailyValue", b.getDailyValue());
-            response.put("totalAmount", b.getTotalDays() * b.getDailyValue());
-            response.put("breakfast", b.isBreakfastIncluded() ? "Incluído" : "Não incluído");
-            return ResponseEntity.ok(response);
+
+            // Buscar o hóspede relacionado
+            Optional<Guest> guest = guestService.getGuestById(b.getGuestId());
+
+            System.out.println("Buscando quarto com ID: " + b.getRoomId());
+
+            // Buscar o quarto relacionado pelo ID (b.getRoomId())
+            Optional<Room> room = roomRepository.findById(b.getRoomId());
+
+            if (room.isEmpty()) {
+                System.out.println("Nenhum quarto encontrado com o ID: " + b.getRoomId());
+            }
+
+            if (guest.isPresent()) {
+                Guest g = guest.get();
+                Map<String, Object> response = new HashMap<>();
+
+                // Formatar datas
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                String checkInDate = dateFormat.format(b.getCheckInDate());
+                String checkOutDate = dateFormat.format(b.getCheckOutDate());
+
+                // Recuperando o total de dias diretamente do banco
+                long totalDays = b.getTotalDays();
+
+                // Calcular o total com as despesas
+                double totalAmount = totalDays * b.getDailyValue();
+
+                // Adicionar os dados ao response
+                response.put("guestName", g.getName());
+                response.put("documentType", g.getDocumentType()); // Tipo de documento do hóspede
+                response.put("documentNumber", g.getDocumentNumber()); // Número do documento do hóspede
+                response.put("roomId", b.getRoomId());
+                response.put("roomNumber", room.map(Room::getRoomNumber).orElse("Não disponível")); // Número do quarto
+                response.put("roomType", room.map(Room::getRoomType).orElse("Não disponível")); // Tipo do quarto
+                response.put("roomDescription", room.map(Room::getDescription).orElse("Não disponível")); // Descrição do quarto
+                response.put("checkInDate", checkInDate);
+                response.put("checkOutDate", checkOutDate);
+                response.put("reservationNumber", b.getReservationNumber());
+                response.put("dailyValue", b.getDailyValue());
+                response.put("totalAmount", totalAmount);
+                response.put("totalDays", totalDays); // Adicionando o total de dias
+                response.put("breakfast", b.isBreakfastIncluded() ? "Incluído" : "Não incluído");
+
+                return ResponseEntity.ok(response);
+            }
+
+            return ResponseEntity.status(404).body(Map.of("message", "Guest not found"));
         }
 
         return ResponseEntity.status(404).body(Map.of("message", "Booking not found"));
     }
 
 
+
     // Get expenses for a specific booking
-    @GetMapping("/{id}/expenses")
-    public ResponseEntity<ExpenseSummary> getExpensesByBookingId(@PathVariable String id) {
+    @GetMapping("/{reservationNumber}/expenses")
+    public ResponseEntity<ExpenseSummary> getExpensesByReservationNumber(@PathVariable String reservationNumber) {
         try {
-            ExpenseSummary expenseSummary = bookingService.getExpensesByBookingId(id);
+            ExpenseSummary expenseSummary = bookingService.getExpensesByReservationNumber(reservationNumber);
             return ResponseEntity.ok(expenseSummary);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);

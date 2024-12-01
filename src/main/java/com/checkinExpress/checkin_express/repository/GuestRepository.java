@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface GuestRepository extends MongoRepository<Guest, String> {
     Optional<Guest> findByDocumentNumberAndDocumentType(String documentNumber, String documentType);
+    Optional<Guest> findByName(String name);
 }

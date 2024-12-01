@@ -35,10 +35,17 @@ public class BookingService {
         return bookingRepository.save(booking);
     }
 
-    // Busca uma reserva pelo ID
+    // Método para buscar uma reserva pelo ID
     public Booking getBookingById(String id) {
         return bookingRepository.findById(id)
                 .orElseThrow(() -> new BookingNotFoundException("Reserva não encontrada com o ID: " + id));
+    }
+
+
+    // Busca uma reserva pelo número da reserva
+    public Booking getBookingByReservationNumber(String reservationNumber) {
+        return bookingRepository.findByReservationNumber(reservationNumber)
+                .orElseThrow(() -> new BookingNotFoundException("Reserva não encontrada com o número da reserva: " + reservationNumber));
     }
 
     // Lista todas as reservas
@@ -53,10 +60,9 @@ public class BookingService {
         }
         bookingRepository.deleteById(id);
     }
-
-    // Busca as despesas associadas a uma reserva pelo ID
-    public ExpenseSummary getExpensesByBookingId(String id) {
-        Booking booking = getBookingById(id);
+    // Método para buscar despesas pelo número da reserva
+    public ExpenseSummary getExpensesByReservationNumber(String reservationNumber) {
+        Booking booking = getBookingByReservationNumber(reservationNumber);
         double totalExpenses = booking.getExpenses().stream()
                 .mapToDouble(Expense::getAmount)
                 .sum();
@@ -114,37 +120,6 @@ public class BookingService {
         bookingRepository.save(booking);
 
         return new ExpenseSummary(booking.getExpenses(), totalExpenses);
-    }
-
-    // Validação do documento (CPF ou Passaporte)
-    private void validateDocument(Guest guest, String documentType, String documentNumber) {
-        // Tipo de documento inválido
-        if (!guest.getDocumentType().equalsIgnoreCase(documentType)) {
-            throw new IllegalArgumentException("Tipo de documento inválido. Esperado: " + guest.getDocumentType());
-        }
-
-        // Número do documento inválido
-        if (!guest.getDocumentNumber().equals(documentNumber)) {
-            throw new IllegalArgumentException("Número do documento inválido.");
-        }
-
-        // Valida o número do documento
-        if ("CPF".equalsIgnoreCase(documentType) && !isValidCPF(documentNumber)) {
-            throw new IllegalArgumentException("CPF inválido.");
-        }
-        if ("Passaporte".equalsIgnoreCase(documentType) && !isValidPassport(documentNumber)) {
-            throw new IllegalArgumentException("Passaporte inválido.");
-        }
-    }
-
-    // Validação básica de CPF
-    private boolean isValidCPF(String cpf) {
-        return cpf != null && cpf.matches("\\d{11}");
-    }
-
-    // Validação básica de passaporte
-    private boolean isValidPassport(String passport) {
-        return passport != null && passport.matches("\\d{6,9}");
     }
 
     public Optional<Booking> getBookingDetailsByReservationNumber(String reservationNumber) {

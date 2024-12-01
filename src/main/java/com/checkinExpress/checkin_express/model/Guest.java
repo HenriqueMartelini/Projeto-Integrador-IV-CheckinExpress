@@ -7,12 +7,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Guest {
     @Id
     private String id;
-    private String name;
+    private String name; // Certifique-se de que este campo existe
     private String documentType;  // Exemplo: "CPF" ou "Passaporte"
     private String documentNumber;  // Número do CPF ou passaporte
 
     // Getters e setters
-
     public String getId() {
         return id;
     }
