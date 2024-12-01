@@ -1,61 +1,80 @@
 package com.checkinExpress.checkin_express.server;
 
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.stereotype.Component;
+
+import java.net.ServerSocket;
 import java.util.ArrayList;
 
-public class Servidor {
-    public static String PORTA_PADRAO = "3000";
+@Component
+public class Servidor implements InitializingBean, DisposableBean {
+    public static final String PORTA_PADRAO = "3000";
+    private Thread servidorThread;
+    private boolean rodando = false;
 
-    public static void main(String[] args) {
-        if (args.length > 1) {
-            System.err.println("Uso esperado: java Servidor [PORTA]\n");
-            return;
-        }
+    @Override
+    public void afterPropertiesSet() {
+        servidorThread = new Thread(() -> {
+            String porta = PORTA_PADRAO;
+            ArrayList<Parceiro> usuarios = new ArrayList<>();
+            AceitadoraDeConexao aceitadoraDeConexao;
 
-        String porta = Servidor.PORTA_PADRAO;
-
-        if (args.length == 1) {
-            porta = args[0];
-        }
-
-        ArrayList<Parceiro> usuarios = new ArrayList<>();
-
-        AceitadoraDeConexao aceitadoraDeConexao = null;
-        try {
-            aceitadoraDeConexao = new AceitadoraDeConexao(porta, usuarios);
-            aceitadoraDeConexao.start();
-        } catch (Exception erro) {
-            System.err.println("Escolha uma porta apropriada e liberada para uso!\n");
-            return;
-        }
-
-        for (;;) {
-            System.out.println("O servidor está ativo! Para desativá-lo,");
-            System.out.println("use o comando \"desativar\"\n");
-            System.out.print("> ");
-
-            String comando = null;
             try {
-                comando = Teclado.getUmString();
-            } catch (Exception erro) {
-            }
+                aceitadoraDeConexao = new AceitadoraDeConexao(porta, usuarios);
+                aceitadoraDeConexao.start();
+                rodando = true;
+                System.out.println("Servidor iniciado na porta " + porta);
 
-            if ("desativar".equalsIgnoreCase(comando)) {
-                synchronized (usuarios) {
-                    ComunicadoDeDesligamento comunicadoDeDesligamento = new ComunicadoDeDesligamento();
+                while (rodando) {
+                    ServerSocket serverSocket = new ServerSocket();
+                    System.out.println("Servidor iniciado na porta: " + porta);
+                    System.out.println("O servidor está ativo! Para desativá-lo, use o comando \"desativar\".");
+                    System.out.print("> ");
 
-                    for (Parceiro usuario : usuarios) {
-                        try {
-                            usuario.receba(comunicadoDeDesligamento);
-                            usuario.adeus();
-                        } catch (Exception erro) {
+                    String comando;
+                    try {
+                        comando = Teclado.getUmString();
+                    } catch (Exception erro) {
+                        continue; // Continua o loop caso ocorra erro na entrada
+                    }
+
+                    if ("desativar".equalsIgnoreCase(comando)) {
+                        synchronized (usuarios) {
+                            ComunicadoDeDesligamento comunicadoDeDesligamento = new ComunicadoDeDesligamento();
+                            for (Parceiro usuario : usuarios) {
+                                try {
+                                    usuario.receba(comunicadoDeDesligamento);
+                                    usuario.adeus();
+                                } catch (Exception erro) {
+                                    // Ignorar erros durante o desligamento
+                                }
+                            }
                         }
+                        rodando = false;
+                        System.out.println("O servidor foi desativado!");
+                    } else {
+                        System.err.println("Comando inválido!");
                     }
                 }
+            } catch (Exception erro) {
+                System.err.println("Erro ao iniciar o servidor: " + erro.getMessage());
+            }
+        });
 
-                System.out.println("O servidor foi desativado!\n");
-                System.exit(0);
-            } else {
-                System.err.println("Comando inválido!\n");
+        servidorThread.start();
+    }
+
+    @Override
+    public void destroy() {
+        System.out.println("Servidor está sendo finalizado...");
+        rodando = false;
+        if (servidorThread != null) {
+            try {
+                servidorThread.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.err.println("Erro ao finalizar o servidor: " + e.getMessage());
             }
         }
     }

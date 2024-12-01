@@ -22,7 +22,7 @@ public class ExpenseSummaryService {
     }
 
     /**
-     * Método que calcula o total das despesas de uma reserva.
+     * Metodo que calcula o total das despesas de uma reserva.
      *
      * @param expenses Lista de despesas a serem somadas.
      * @return O total das despesas.
@@ -34,7 +34,7 @@ public class ExpenseSummaryService {
     }
 
     /**
-     * Método que recupera um resumo de despesas de uma reserva com base no ID da reserva.
+     * Metodo que recupera um resumo de despesas de uma reserva com base no ID da reserva.
      *
      * @param bookingId ID da reserva.
      * @return O resumo das despesas (ExpenseSummary).
@@ -55,7 +55,7 @@ public class ExpenseSummaryService {
             return expenseSummary;
         }
 
-        // Caso a reserva não seja encontrada, lançar uma exceção ou retornar um erro adequado
+        // Caso a reserva não seja encontrada, lancar uma excecão ou retornar um erro adequado
         throw new BookingNotFoundException("Reserva não encontrada com ID: " + bookingId);
     }
 }
