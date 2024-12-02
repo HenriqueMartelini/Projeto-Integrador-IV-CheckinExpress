@@ -6,6 +6,7 @@ target/
 .DS_Store
 
 # Ignorar arquivos de configuração do Spring Tool Suite
+### STS ###
 .apt_generated
 .classpath
 .factorypath
@@ -30,3 +31,5 @@ build/
 
 # Ignorar arquivos de configuração do VS Code
 .vscode/
+
+.env

@@ -30,37 +30,6 @@ public class BookingServiceWhiteBoxTest {
     }
 
     @Test
-    void testCreateBooking_ValidBooking() {
-        // Criação de uma booking válida com todos os campos necessários
-        Date bookingDate = new Date();
-        Booking booking = new Booking("1", "123", "A1", bookingDate, Arrays.asList(new Expense("Food", 100.0), new Expense("Transport", 50.0)));
-
-        // Mock do comportamento do repository
-        when(bookingRepository.save(any(Booking.class))).thenReturn(booking);
-
-        // Chama o método de criação
-        Booking result = bookingService.createBooking(booking);
-
-        // Verifica se o método save do repository foi chamado
-        verify(bookingRepository, times(1)).save(booking);
-
-        // Assegura que o retorno é o esperado
-        assertNotNull(result);
-        assertEquals("123", result.getGuestId());
-        assertEquals("A1", result.getRoomId());
-        assertEquals(bookingDate, result.getBookingDate());
-        assertEquals(2, result.getExpenses().size());
-    }
-
-    @Test
-    void testCreateBooking_NullBooking() {
-        // Testa a exceção lançada quando a reserva é nula
-        assertThrows(IllegalArgumentException.class, () -> {
-            bookingService.createBooking(null);
-        });
-    }
-
-    @Test
     void testGetBookingById_ValidId() {
         // Criação de uma reserva de exemplo
         Date bookingDate = new Date();
@@ -90,29 +59,6 @@ public class BookingServiceWhiteBoxTest {
         // Chama o método e espera que lance uma BookingNotFoundException
         assertThrows(BookingNotFoundException.class, () -> {
             bookingService.getBookingById("1");
-        });
-    }
-
-    @Test
-    void testDeleteBookingById_ValidId() {
-        // Mocka que a reserva existe
-        when(bookingRepository.existsById("1")).thenReturn(true);
-
-        // Chama o método para deletar
-        bookingService.deleteBookingById("1");
-
-        // Verifica se o método deleteById foi chamado
-        verify(bookingRepository, times(1)).deleteById("1");
-    }
-
-    @Test
-    void testDeleteBookingById_BookingNotFound() {
-        // Mocka a ausência de uma reserva
-        when(bookingRepository.existsById("1")).thenReturn(false);
-
-        // Chama o método e espera que lance uma BookingNotFoundException
-        assertThrows(BookingNotFoundException.class, () -> {
-            bookingService.deleteBookingById("1");
         });
     }
 

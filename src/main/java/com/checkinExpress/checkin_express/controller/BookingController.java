@@ -2,6 +2,7 @@ package com.checkinExpress.checkin_express.controller;
 
 import com.checkinExpress.checkin_express.dto.CheckInRequest;
 import com.checkinExpress.checkin_express.dto.CheckOutRequest;
+import com.checkinExpress.checkin_express.exception.GuestNotFoundException;
 import com.checkinExpress.checkin_express.model.Booking;
 import com.checkinExpress.checkin_express.model.ExpenseSummary;
 import com.checkinExpress.checkin_express.service.BookingService;
@@ -42,12 +43,6 @@ public class BookingController {
         return ResponseEntity.ok(bookings);
     }
 
-    // Delete a booking by ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBooking(@PathVariable String id) {
-        bookingService.deleteBookingById(id);
-        return ResponseEntity.noContent().build();
-    }
 
     // Get expenses for a specific booking
     @GetMapping("/{id}/expenses")

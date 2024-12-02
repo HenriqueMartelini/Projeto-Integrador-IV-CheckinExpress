@@ -25,7 +25,8 @@ public class ExpenseSummaryServiceWhiteBoxTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this); // Inicializa os mocks
+        // Inicializa os mocks
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -68,5 +69,17 @@ public class ExpenseSummaryServiceWhiteBoxTest {
         assertNotNull(summary);
         assertEquals(0.0, summary.getTotal());
         assertEquals(0, summary.getExpenses().size());
+    }
+
+    @Test
+    void testGetExpenseSummaryHandlesBookingNotFound() {
+        // Mock do comportamento do repository para não encontrar a reserva
+        when(bookingRepository.findById("nonexistent-id")).thenReturn(Optional.empty());
+
+        // Chama o serviço para obter o resumo de despesas com um ID inexistente
+        ExpenseSummary summary = expenseSummaryService.getExpenseSummary("nonexistent-id");
+
+        // Verifica se o resultado é nulo ou retorna um valor de erro adequado (dependendo da implementação)
+        assertNull(summary);
     }
 }

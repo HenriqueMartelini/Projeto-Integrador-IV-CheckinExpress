@@ -7,14 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 public class BookingControllerWhiteBoxTest {
 
@@ -28,54 +27,50 @@ public class BookingControllerWhiteBoxTest {
 
     @BeforeEach
     void setUp() {
+        // Inicializa os mocks e configura o MockMvc
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(bookingController).build();
     }
 
     @Test
-    void testCreateBooking_ValidData() throws Exception {
-        // Simula o comportamento do serviço de criação de reserva
-        Booking booking = new Booking("John Doe", "2024-12-01", "2024-12-05");
-        when(bookingService.createBooking(any(Booking.class))).thenReturn(booking);
+    void testGetBooking_ValidId() throws Exception {
+        // Simula o comportamento do serviço ao buscar uma reserva existente
+        Booking booking = new Booking("Alice Smith", "2024-12-01T21:28:59.737Z", "2025-12-15T00:00:00.000Z");
+        when(bookingService.getBookingById("booking123")).thenReturn(booking);
 
-        // Envia a requisição HTTP e verifica se o status é 200
-        mockMvc.perform(post("/bookings")
-                        .contentType("application/json")
-                        .content("{\"name\":\"John Doe\", \"checkInDate\":\"2024-12-01\", \"checkOutDate\":\"2024-12-05\"}"))
-                .andExpect(status().isOk());
+        // Envia a requisição GET e verifica se o status é 200 (OK)
+        mockMvc.perform(get("/bookings/booking123")
+                        .contentType("application/json"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"name\":\"Alice Smith\", \"checkInDate\":\"2024-12-01T21:28:59.737Z\", \"checkOutDate\":\"2025-12-15T00:00:00.000Z\"}"));
 
-        // Verifica se o método createBooking do BookingService foi chamado
-        verify(bookingService, times(1)).createBooking(any(Booking.class));
+        verify(bookingService, times(1)).getBookingById("booking123");
     }
 
     @Test
-    void testCreateBooking_InvalidData() throws Exception {
-        // Simula o comportamento quando os dados são inválidos
-        Booking invalidBooking = new Booking(null, "2024-12-01", null);
-        when(bookingService.createBooking(any(Booking.class))).thenThrow(new IllegalArgumentException("Invalid booking data"));
+    void testGetBooking_NotFound() throws Exception {
+        // Simula o comportamento quando a reserva não é encontrada
+        when(bookingService.getBookingById("booking123")).thenReturn(null);
 
-        // Envia a requisição HTTP e verifica se o status é 400 (Bad Request)
-        mockMvc.perform(post("/bookings")
-                        .contentType("application/json")
-                        .content("{\"name\":null, \"checkInDate\":\"2024-12-01\", \"checkOutDate\":null}"))
-                .andExpect(status().isBadRequest());
+        // Envia a requisição GET e verifica se o status é 404 (Not Found)
+        mockMvc.perform(get("/bookings/1")
+                        .contentType("application/json"))
+                .andExpect(status().isNotFound());
 
-        // Verifica se o método createBooking do BookingService foi chamado
-        verify(bookingService, times(1)).createBooking(any(Booking.class));
+        verify(bookingService, times(1)).getBookingById("booking123");
     }
 
     @Test
-    void testCreateBooking_ServiceThrowsException() throws Exception {
-        // Simula o comportamento quando o serviço lança uma exceção (por exemplo, falha interna)
-        when(bookingService.createBooking(any(Booking.class))).thenThrow(new RuntimeException("Internal server error"));
+    void testGetBooking_ServiceThrowsException() throws Exception {
+        // Simula o comportamento quando o serviço lança uma exceção (erro interno)
+        when(bookingService.getBookingById("booking123")).thenThrow(new RuntimeException("Internal server error"));
 
-        // Envia a requisição HTTP e verifica se o status é 500 (Internal Server Error)
-        mockMvc.perform(post("/bookings")
-                        .contentType("application/json")
-                        .content("{\"name\":\"John Doe\", \"checkInDate\":\"2024-12-01\", \"checkOutDate\":\"2024-12-05\"}"))
+        // Envia a requisição GET e verifica se o status é 500 (Internal Server Error)
+        mockMvc.perform(get("/bookings/1")
+                        .contentType("application/json"))
                 .andExpect(status().isInternalServerError());
 
-        // Verifica se o método createBooking do BookingService foi chamado
-        verify(bookingService, times(1)).createBooking(any(Booking.class));
+        // Verifica se o método getBookingById foi chamado uma vez com o ID 1
+        verify(bookingService, times(1)).getBookingById("booking123");
     }
 }

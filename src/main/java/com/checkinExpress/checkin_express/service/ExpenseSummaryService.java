@@ -22,40 +22,43 @@ public class ExpenseSummaryService {
     }
 
     /**
-     * Metodo que calcula o total das despesas de uma reserva.
+     * Método que calcula o total das despesas de uma reserva.
      *
      * @param expenses Lista de despesas a serem somadas.
      * @return O total das despesas.
      */
     public double calculateTotalExpense(List<Expense> expenses) {
+        if (expenses == null || expenses.isEmpty()) {
+            return 0.0;  // Se a lista for vazia ou null, retornamos 0
+        }
         return expenses.stream()
                 .mapToDouble(Expense::getAmount)
                 .sum();
     }
 
     /**
-     * Metodo que recupera um resumo de despesas de uma reserva com base no ID da reserva.
+     * Método que recupera um resumo de despesas de uma reserva com base no ID da reserva.
      *
      * @param bookingId ID da reserva.
      * @return O resumo das despesas (ExpenseSummary).
+     * @throws BookingNotFoundException Se a reserva não for encontrada.
      */
     public ExpenseSummary getExpenseSummary(String bookingId) {
+        // Buscando a reserva pelo ID
         Optional<Booking> bookingOptional = bookingRepository.findById(bookingId);
 
-        if (bookingOptional.isPresent()) {
-            Booking booking = bookingOptional.get();
-
-            // Calculando o total das despesas
-            double totalExpenses = calculateTotalExpense(booking.getExpenses());
-
-            // Criando o objeto de resumo de despesas
-            ExpenseSummary expenseSummary = new ExpenseSummary(booking.getExpenses(), totalExpenses);
-
-            // Retornando o resumo das despesas
-            return expenseSummary;
+        // Se a reserva não for encontrada, lança uma exceção BookingNotFoundException
+        if (!bookingOptional.isPresent()) {
+            throw new BookingNotFoundException("Reserva não encontrada com ID: " + bookingId);
         }
 
-        // Caso a reserva não seja encontrada, lancar uma excecão ou retornar um erro adequado
-        throw new BookingNotFoundException("Reserva não encontrada com ID: " + bookingId);
+        // Recuperando a reserva e calculando o total das despesas
+        Booking booking = bookingOptional.get();
+        double totalExpenses = calculateTotalExpense(booking.getExpenses());
+
+        // Criando o objeto de resumo de despesas
+        ExpenseSummary expenseSummary = new ExpenseSummary(booking.getExpenses(), totalExpenses);
+
+        return expenseSummary;  // Retornando o resumo das despesas
     }
 }

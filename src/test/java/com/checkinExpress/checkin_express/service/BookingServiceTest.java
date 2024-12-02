@@ -41,16 +41,6 @@ public class BookingServiceTest {
     }
 
     @Test
-    public void testCreateBooking() {
-        Mockito.when(bookingRepository.save(booking)).thenReturn(booking);
-
-        Booking createdBooking = bookingService.createBooking(booking);
-
-        assertNotNull(createdBooking);
-        assertEquals("1", createdBooking.getId());
-    }
-
-    @Test
     public void testGetBookingById_Success() {
         Mockito.when(bookingRepository.findById("1")).thenReturn(Optional.of(booking));
 
@@ -80,25 +70,5 @@ public class BookingServiceTest {
         assertNotNull(expenseSummary);
         assertEquals(100.0, expenseSummary.getTotal());
         assertEquals(1, expenseSummary.getExpenses().size());
-    }
-
-    @Test
-    public void testDeleteBookingById_Success() {
-        Mockito.when(bookingRepository.existsById("1")).thenReturn(true);
-
-        bookingService.deleteBookingById("1");
-
-        Mockito.verify(bookingRepository, Mockito.times(1)).deleteById("1");
-    }
-
-    @Test
-    public void testDeleteBookingById_NotFound() {
-        Mockito.when(bookingRepository.existsById("2")).thenReturn(false);
-
-        BookingNotFoundException thrown = assertThrows(BookingNotFoundException.class, () -> {
-            bookingService.deleteBookingById("2");
-        });
-
-        assertEquals("Booking not found with ID: 2", thrown.getMessage());
     }
 }

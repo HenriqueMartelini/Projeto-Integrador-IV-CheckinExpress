@@ -50,6 +50,8 @@ public class ExpenseSummaryServiceBlackBoxTest {
         assertNotNull(summary);
         assertEquals(150.0, summary.getTotal());
         assertEquals(2, summary.getExpenses().size());
+        assertTrue(summary.getExpenses().contains(expense1)); // Verifica se a despesa "Food" está na lista
+        assertTrue(summary.getExpenses().contains(expense2)); // Verifica se a despesa "Transport" está na lista
     }
 
     @Test
@@ -61,5 +63,16 @@ public class ExpenseSummaryServiceBlackBoxTest {
         assertThrows(BookingNotFoundException.class, () -> {
             expenseSummaryService.getExpenseSummary("1");
         });
+    }
+
+    @Test
+    void testCalculateTotalExpense() {
+        // Verifica o método calculateTotalExpense isoladamente
+        Expense expense1 = new Expense("Food", 100.0);
+        Expense expense2 = new Expense("Transport", 50.0);
+
+        double totalExpense = expenseSummaryService.calculateTotalExpense(Arrays.asList(expense1, expense2));
+
+        assertEquals(150.0, totalExpense); // Verifica o cálculo do total de despesas
     }
 }

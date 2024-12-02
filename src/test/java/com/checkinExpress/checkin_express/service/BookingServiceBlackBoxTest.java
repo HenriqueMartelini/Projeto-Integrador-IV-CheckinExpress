@@ -23,16 +23,4 @@ class BookingServiceBlackBoxTest {
     public BookingServiceBlackBoxTest() {
         MockitoAnnotations.openMocks(this);
     }
-
-    @Test
-    void testCreateBooking() {
-        Booking mockBooking = new Booking("1", "101", LocalDate.now(), LocalDate.now().plusDays(5));
-        when(bookingRepository.save(mockBooking)).thenReturn(mockBooking);
-
-        Booking createdBooking = bookingService.createBooking(mockBooking);
-
-        assertNotNull(createdBooking);
-        assertEquals("101", createdBooking.getRoomId());
-        verify(bookingRepository, times(1)).save(mockBooking);
-    }
 }

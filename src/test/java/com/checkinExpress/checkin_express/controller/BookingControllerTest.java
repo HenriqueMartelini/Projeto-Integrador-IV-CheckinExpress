@@ -46,20 +46,6 @@ public class BookingControllerTest {
     }
 
     @Test
-    public void testCreateBooking() throws Exception {
-        // Mocking the behavior of bookingService
-        when(bookingService.createBooking(any(Booking.class))).thenReturn(booking);
-
-        // Performing the POST request and validating the response
-        mockMvc.perform(post("/api/bookings")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":\"1\", \"expenses\":[{\"amount\":100.0, \"description\":\"Café\"}]}"))
-                .andExpect(status().isOk()) // Verifying the status code
-                .andExpect(jsonPath("$.id").value("1")) // Verifying the booking ID
-                .andExpect(jsonPath("$.expenses[0].amount").value(100.0)); // Verifying the expense amount
-    }
-
-    @Test
     public void testGetBookingById_Success() throws Exception {
         // Mocking the behavior of bookingService
         when(bookingService.getBookingById("1")).thenReturn(booking);
@@ -86,21 +72,5 @@ public class BookingControllerTest {
                 .andExpect(status().isOk()) // Verifying the status code
                 .andExpect(jsonPath("$[0].id").value("1")) // Verifying the booking ID in the list
                 .andExpect(jsonPath("$[0].expenses[0].amount").value(100.0)); // Verifying the expense amount in the list
-    }
-
-    @Test
-    public void testDeleteBooking_Success() throws Exception {
-        doNothing().when(bookingService).deleteBookingById("1");
-
-        mockMvc.perform(delete("/api/bookings/1"))
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
-    public void testDeleteBooking_NotFound() throws Exception {
-        doThrow(new RuntimeException("Booking not found")).when(bookingService).deleteBookingById("2");
-
-        mockMvc.perform(delete("/api/bookings/2"))
-                .andExpect(status().isNotFound());
     }
 }

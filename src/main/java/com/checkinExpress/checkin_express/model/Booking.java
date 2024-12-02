@@ -1,12 +1,11 @@
 package com.checkinExpress.checkin_express.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -19,16 +18,20 @@ public class Booking {
     private String guestName;
     private String roomId;
 
-    private String bookingDateString; // Data inicial como String
+    private String bookingDateString;  // Data inicial como String
     private List<Expense> expenses;
     private String checkInDateString;  // Data de check-in como String
     private String checkOutDateString;  // Data de check-out como String
+    private double dailyValue;   // Valor da diária
+    private int totalDays;       // Total de dias da estadia
+    private boolean breakfastIncluded;  // Indica se o café da manhã está incluído
 
-    // Construtor sem a necessidade de checkInDate e checkOutDate
-    public Booking() {}
+    // Construtor padrão
+    public Booking() {
+    }
 
     // Construtor com todos os campos
-    public Booking(String id, String reservationNumber, String guestId, String guestName, String roomId, String bookingDateString, List<Expense> expenses, String checkInDateString, String checkOutDateString) {
+    public Booking(String id, String reservationNumber, String guestId, String guestName, String roomId, String bookingDateString, List<Expense> expenses, String checkInDateString, String checkOutDateString, double dailyValue, int totalDays, boolean breakfastIncluded) {
         this.id = id;
         this.reservationNumber = reservationNumber;
         this.guestId = guestId;
@@ -38,18 +41,21 @@ public class Booking {
         this.expenses = expenses;
         this.checkInDateString = checkInDateString;
         this.checkOutDateString = checkOutDateString;
+        this.dailyValue = dailyValue;
+        this.totalDays = totalDays;
+        this.breakfastIncluded = breakfastIncluded;
     }
 
-    public Booking(String johnDoe, String date, String date1) {
+    public <T> Booking(String number, String number1, String a1, Date bookingDate, List<T> list) {
     }
 
     public Booking(String number, String number1, LocalDate now, LocalDate localDate) {
     }
 
-    public <T> Booking(String number, String number1, String a1, Date bookingDate, List<T> list) {
+    public Booking(String johnDoe, String date, String date1) {
     }
-    // Getters e Setters
 
+    // Getters e Setters
     public String getId() {
         return id;
     }
@@ -146,10 +152,40 @@ public class Booking {
         }
     }
 
-
     // Método para definir a data de check-in como Date
     public void setCheckInDate(Date checkInDate) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         this.checkInDateString = formatter.format(checkInDate);  // Converte o Date para String no formato correto
+    }
+
+    // Método para definir a data de check-out como Date
+    public void setCheckOutDate(Date checkOutDate) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        this.checkOutDateString = formatter.format(checkOutDate);  // Converte o Date para String no formato correto
+    }
+
+    // Getters e Setters para as novas propriedades
+    public double getDailyValue() {
+        return dailyValue;
+    }
+
+    public void setDailyValue(double dailyValue) {
+        this.dailyValue = dailyValue;
+    }
+
+    public int getTotalDays() {
+        return totalDays;
+    }
+
+    public void setTotalDays(int totalDays) {
+        this.totalDays = totalDays;
+    }
+
+    public boolean isBreakfastIncluded() {
+        return breakfastIncluded;
+    }
+
+    public void setBreakfastIncluded(boolean breakfastIncluded) {
+        this.breakfastIncluded = breakfastIncluded;
     }
 }
