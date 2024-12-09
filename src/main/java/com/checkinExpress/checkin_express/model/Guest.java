@@ -11,7 +11,11 @@ public class Guest {
     private String documentType;  // Exemplo: "CPF" ou "Passaporte"
     private String documentNumber;  // Número do CPF ou passaporte
 
-    public Guest(String johnDoe, String number, String id) {
+    // Construtor dos arquivos de testes
+    public Guest(String name, String documentNumber, String documentType) {
+        this.name = name;
+        this.documentNumber = documentNumber;
+        this.documentType = documentType;
     }
 
     // Getters e setters

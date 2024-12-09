@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookingService {
@@ -27,6 +28,7 @@ public class BookingService {
         this.guestRepository = guestRepository;
     }
 
+    // Cria um novo booking
     public Booking createBooking(Booking booking) {
         if (booking == null) {
             throw new IllegalArgumentException("Booking cannot be null");
@@ -34,15 +36,18 @@ public class BookingService {
         return bookingRepository.save(booking);
     }
 
+    // Pega um booking pelo ID
     public Booking getBookingById(String id) {
         return bookingRepository.findById(id)
                 .orElseThrow(() -> new BookingNotFoundException("Booking not found with ID: " + id));
     }
 
+    // Pega todos os bookings
     public List<Booking> getAllBookings() {
         return bookingRepository.findAll();
     }
 
+    // Deletar um booking pelo ID
     public void deleteBookingById(String id) {
         if (!bookingRepository.existsById(id)) {
             throw new BookingNotFoundException("Booking not found with ID: " + id);
@@ -50,17 +55,22 @@ public class BookingService {
         bookingRepository.deleteById(id);
     }
 
+    // Pega as despesas de um booking pelo ID
     public ExpenseSummary getExpensesByBookingId(String id) {
         Booking booking = getBookingById(id);
         double totalExpenses = booking.getExpenses().stream().mapToDouble(Expense::getAmount).sum();
         return new ExpenseSummary(booking.getExpenses(), totalExpenses);
     }
 
+    // Validar um booking
     public boolean validateBooking(String reservationNumber, String guestName) {
         return bookingRepository.findByReservationNumberAndGuestName(reservationNumber, guestName).isPresent();
     }
 
+    // Realiza um checkin de um booking
     public Booking checkInBooking(String reservationNumber, String guestName, String documentType, String documentNumber) {
+        System.out.println("Check-in iniciado com: " + reservationNumber + ", " + guestName + ", " + documentType + ", " + documentNumber);
+
         // Valida a reserva
         Booking booking = bookingRepository.findByReservationNumberAndGuestName(reservationNumber, guestName)
                 .orElseThrow(() -> new BookingNotFoundException("Reserva não encontrada para os dados fornecidos."));
@@ -90,33 +100,30 @@ public class BookingService {
     }
 
     private boolean isValidCPF(String cpf) {
-        // Validação básica do CPF (apenas formato, sem cálculo de dígitos verificadores)
         return cpf != null && cpf.matches("\\d{11}");
     }
 
     private boolean isValidPassport(String passport) {
-        // Validação básica do passaporte (apenas formato)
         return passport != null && passport.matches("\\d{6,9}");
     }
 
-    public ExpenseSummary checkOutBooking(String reservationNumber, String guestName) {
-        // Valida a reserva
-        Booking booking = bookingRepository.findByReservationNumberAndGuestName(reservationNumber, guestName)
-                .orElseThrow(() -> new BookingNotFoundException("Reserva não encontrada para os dados fornecidos."));
+    // Pega os detalhes de um booking pelo número da reserva
+    public Optional<Booking> getBookingDetailsByReservationNumber(String reservationNumber) {
+        return bookingRepository.findByReservationNumber(reservationNumber);
+    }
 
-        // Verifica se o check-in foi realizado
-        if (booking.getCheckInDate() == null) {
-            throw new IllegalStateException("O hóspede ainda não fez o check-in.");
-        }
+    // Pega um booking pelo número da reserva
+    public Booking getBookingByReservationNumber(String reservationNumber) {
+        return bookingRepository.findByReservationNumber(reservationNumber)
+                .orElseThrow(() -> new BookingNotFoundException("Reserva não encontrada com o número da reserva: " + reservationNumber));
+    }
 
-        // Calcula o total das despesas
-        double totalExpenses = booking.getExpenses().stream().mapToDouble(Expense::getAmount).sum();
-
-        // Atualiza a data de check-out
-        booking.setCheckOutDateString(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(new Date()));
-        bookingRepository.save(booking);
-
-        // Retorna o resumo de despesas
+    // Método para buscar despesas pelo número da reserva
+    public ExpenseSummary getExpensesByReservationNumber(String reservationNumber) {
+        Booking booking = getBookingByReservationNumber(reservationNumber);
+        double totalExpenses = booking.getExpenses().stream()
+                .mapToDouble(Expense::getAmount)
+                .sum();
         return new ExpenseSummary(booking.getExpenses(), totalExpenses);
     }
 }

@@ -1,10 +1,16 @@
 package com.checkinExpress.checkin_express.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class CheckInRequest {
+    @NotBlank
     private String reservationNumber;
+    @NotBlank
     private String guestName;
-    private String documentType;   // "CPF" ou "PASSPORT"
-    private String documentNumber; // CPF ou número do passaporte
+    @NotBlank
+    private String documentType;
+    @NotBlank
+    private String documentNumber;
 
     // Getters e setters
     public String getReservationNumber() {

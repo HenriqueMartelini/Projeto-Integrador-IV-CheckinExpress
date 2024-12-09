@@ -7,15 +7,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Room {
 
     @Id
-    private String id;  // ID do quarto (pode ser gerado automaticamente pelo MongoDB)
+    private String id;
 
-    private String roomNumber;  // Número do quarto
-    private double dailyValue;  // Valor da diária
-    private boolean available;  // Se o quarto está disponível ou não
-    private String roomType;    // Tipo do quarto (e.g., "Luxo", "Standard")
-    private String description; // Descrição do quarto
+    private String roomNumber;
+    private double dailyValue;
+    private boolean available;
+    private String roomType;
+    private String description;
 
-    public Room(String a1, String single) {
+    // Construtor dos arquivos de testes
+    public Room(String roomNumber, String roomType) {
+        this.roomNumber = roomNumber;
+        this.roomType = roomType;
     }
 
     // Getters and Setters

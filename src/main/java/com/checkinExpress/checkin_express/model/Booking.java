@@ -18,13 +18,13 @@ public class Booking {
     private String guestName;
     private String roomId;
 
-    private String bookingDateString;  // Data inicial como String
+    private String bookingDateString;
     private List<Expense> expenses;
-    private String checkInDateString;  // Data de check-in como String
-    private String checkOutDateString;  // Data de check-out como String
-    private double dailyValue;   // Valor da diária
-    private int totalDays;       // Total de dias da estadia
-    private boolean breakfastIncluded;  // Indica se o café da manhã está incluído
+    private String checkInDateString;
+    private String checkOutDateString;
+    private double dailyValue;
+    private int totalDays;
+    private boolean breakfastIncluded;
 
     // Construtor padrão
     public Booking() {
@@ -46,13 +46,13 @@ public class Booking {
         this.breakfastIncluded = breakfastIncluded;
     }
 
-    public <T> Booking(String number, String number1, String a1, Date bookingDate, List<T> list) {
+    public <T> Booking(String id, String reservationNumber, String roomId, Date bookingDate, List<T> list) {
     }
 
     public Booking(String number, String number1, LocalDate now, LocalDate localDate) {
     }
 
-    public Booking(String johnDoe, String date, String date1) {
+    public Booking(String guestName, String date, String date1) {
     }
 
     // Getters e Setters

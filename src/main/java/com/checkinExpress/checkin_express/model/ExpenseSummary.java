@@ -12,7 +12,6 @@ public class ExpenseSummary {
     }
 
     public ExpenseSummary() {
-
     }
 
     public List<Expense> getExpenses() {

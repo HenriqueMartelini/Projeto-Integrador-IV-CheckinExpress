@@ -32,4 +32,5 @@ build/
 # Ignorar arquivos de configuração do VS Code
 .vscode/
 
+# Ignorar arquivos de ambiente contendo variáveis sensíveis
 .env

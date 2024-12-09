@@ -33,21 +33,21 @@ public class BookingServiceWhiteBoxTest {
     void testGetBookingById_ValidId() {
         // Criação de uma reserva de exemplo
         Date bookingDate = new Date();
-        Booking booking = new Booking("1", "123", "A1", bookingDate, Arrays.asList(new Expense("Food", 100.0), new Expense("Transport", 50.0)));
+        Booking booking = new Booking("booking123", "123456", "room123", bookingDate, Arrays.asList(new Expense("Minibar", 50), new Expense("Room Service", 100), new Expense("Lavanderia", 60)));
 
         // Mock do comportamento do repository
-        when(bookingRepository.findById("1")).thenReturn(Optional.of(booking));
+        when(bookingRepository.findById("booking123")).thenReturn(Optional.of(booking));
 
         // Chama o método de buscar a reserva por ID
-        Booking result = bookingService.getBookingById("1");
+        Booking result = bookingService.getBookingById("booking123");
 
         // Verifica se o método findById foi chamado
-        verify(bookingRepository, times(1)).findById("1");
+        verify(bookingRepository, times(1)).findById("booking123");
 
         // Assegura que o retorno é o esperado
         assertNotNull(result);
-        assertEquals("123", result.getGuestId());
-        assertEquals("A1", result.getRoomId());
+        assertEquals("123456", result.getGuestId());
+        assertEquals("room123", result.getRoomId());
         assertEquals(bookingDate, result.getBookingDate());
     }
 

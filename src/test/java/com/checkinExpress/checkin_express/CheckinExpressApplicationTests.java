@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class CheckinExpressApplicationTests {
 
 	@Autowired
-	private ApplicationContext applicationContext;  // Corrigido de "applicationCoxntext" para "applicationContext"
-
+	private ApplicationContext applicationContext;
+	
 	@Test
 	void contextLoads() {
 		// Verifica se o contexto da aplicação foi carregado corretamente

@@ -133,7 +133,7 @@ public class BookingControllerBlackBoxTest {
 
     @Test
     void testGetBookingDetails_ValidReservationNumber() {
-        String reservationNumber = "123456"; // Substituir pelo número de reserva válido
+        String reservationNumber = "123456";
         ResponseEntity<Map> response = restTemplate.getForEntity(
                 BASE_URL + "/details/" + reservationNumber,
                 Map.class
@@ -147,7 +147,7 @@ public class BookingControllerBlackBoxTest {
 
     @Test
     void testGetBookingDetails_InvalidReservationNumber() {
-        String reservationNumber = "99999"; // Substituir por um número inexistente
+        String reservationNumber = "99999";
         ResponseEntity<Map> response = restTemplate.getForEntity(
                 BASE_URL + "/details/" + reservationNumber,
                 Map.class

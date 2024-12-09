@@ -13,17 +13,17 @@ import java.util.List;
 @RequestMapping("/api/expenses")
 public class ExpenseController {
 
-        private final ExpenseService expenseService;
+    private final ExpenseService expenseService;
 
-        @Autowired
-        public ExpenseController(ExpenseService expenseService) {
-            this.expenseService = expenseService;
-        }
-
-        // Endpoint para pegar as despesas de uma reserva específica
-        @GetMapping("/{bookingId}")
-        public ResponseEntity<List<Expense>> getExpenses(@PathVariable String bookingId) {
-            List<Expense> expenses = expenseService.getExpensesByBookingId(bookingId);
-            return ResponseEntity.ok(expenses);
-        }
+    @Autowired
+    public ExpenseController(ExpenseService expenseService) {
+        this.expenseService = expenseService;
     }
+
+    // Endpoint para pegar as despesas de uma reserva específica
+    @GetMapping("/{bookingId}")
+    public ResponseEntity<List<Expense>> getExpenses(@PathVariable String bookingId) {
+        List<Expense> expenses = expenseService.getExpensesByBookingId(bookingId);
+        return ResponseEntity.ok(expenses);
+    }
+}

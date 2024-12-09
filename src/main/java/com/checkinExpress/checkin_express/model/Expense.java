@@ -12,9 +12,9 @@ public class Expense {
     private String id;
     private String description;
     private double amount;
-    private String bookingId;  // Referência à reserva (id da reserva)
-    private Date expenseDate;  // Data da despesa
-    private String category;   // Categoria da despesa
+    private String bookingId;
+    private Date expenseDate;
+    private String category;
 
     // Construtor padrão
     public Expense() {
@@ -30,7 +30,10 @@ public class Expense {
         this.category = category;
     }
 
-    public Expense(String café, double v) {
+    // Construtor dos arquivos de testes
+    public Expense(String description, double amount) {
+        this.description = description;
+        this.amount = amount;
     }
 
     // Getters e Setters
